@@ -21,7 +21,7 @@
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.3.0",
     "multer": "^2.1.1",
-    "cloudinary-multer": "https://github.com/Aryaman1706/cloudinary-multer.git"
+    "@fluidjs/multer-cloudinary": "^1.0.4"
   },
   "devDependencies": {
     "@types/webidl-conversions": "^7.0.3",
