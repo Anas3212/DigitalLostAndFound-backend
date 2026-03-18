@@ -73,7 +73,7 @@ export const getItems = async (req, res) => {
 // @access  Public
 export const getItemById = async (req, res) => {
   try {
-    const item = await Item.findById(req.params.id).populate('reportedBy', 'name email avatar');
+    const item = await Item.findById(req.params.id).populate('reportedBy', 'name email avatar phoneNumber');
     if (item) {
       res.json(item);
     } else {
@@ -130,7 +130,7 @@ export const updateItem = async (req, res) => {
     }
 
     const updatedItem = await item.save();
-    const populatedItem = await Item.findById(updatedItem._id).populate('reportedBy', 'name email avatar');
+    const populatedItem = await Item.findById(updatedItem._id).populate('reportedBy', 'name email avatar phoneNumber');
     res.json(populatedItem);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -170,7 +170,7 @@ export const deleteItem = async (req, res) => {
 export const getPublicItemInfo = async (req, res) => {
   try {
     const item = await Item.findById(req.params.id)
-      .populate('reportedBy', 'name'); // Only send the name for privacy
+      .populate('reportedBy', 'name email phoneNumber'); // Include email/phone as requested
     
     if (item) {
       // Send only non-sensitive info
@@ -184,7 +184,9 @@ export const getPublicItemInfo = async (req, res) => {
         date: item.date,
         images: item.images,
         status: item.status,
-        owner: item.reportedBy?.name || 'Anonymous'
+        owner: item.reportedBy?.name || 'Anonymous',
+        ownerEmail: item.reportedBy?.email,
+        ownerPhone: item.reportedBy?.phoneNumber
       };
       res.json(publicData);
     } else {

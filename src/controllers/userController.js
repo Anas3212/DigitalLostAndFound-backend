@@ -11,7 +11,7 @@ const generateToken = (id) => {
 // @route   POST /api/users
 // @access  Public
 export const registerUser = async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, phoneNumber } = req.body;
 
   const userExists = await User.findOne({ email });
 
@@ -23,6 +23,7 @@ export const registerUser = async (req, res) => {
     name,
     email,
     password,
+    phoneNumber,
   });
 
   if (user) {
@@ -30,6 +31,7 @@ export const registerUser = async (req, res) => {
       _id: user._id,
       name: user.name,
       email: user.email,
+      phoneNumber: user.phoneNumber,
       token: generateToken(user._id),
     });
   } else {
@@ -50,6 +52,7 @@ export const authUser = async (req, res) => {
       _id: user._id,
       name: user.name,
       email: user.email,
+      phoneNumber: user.phoneNumber,
       token: generateToken(user._id),
     });
   } else {
@@ -68,6 +71,7 @@ export const getUserProfile = async (req, res) => {
         _id: user._id,
         name: user.name,
         email: user.email,
+        phoneNumber: user.phoneNumber,
       });
     } else {
       res.status(404).json({ message: 'User not found' });
@@ -87,6 +91,7 @@ export const updateUserProfile = async (req, res) => {
     if (user) {
       user.name = req.body.name || user.name;
       user.email = req.body.email || user.email;
+      user.phoneNumber = req.body.phoneNumber || user.phoneNumber;
 
       if (req.body.password) {
         user.password = req.body.password;
@@ -98,6 +103,7 @@ export const updateUserProfile = async (req, res) => {
         _id: updatedUser._id,
         name: updatedUser.name,
         email: updatedUser.email,
+        phoneNumber: updatedUser.phoneNumber,
         token: generateToken(updatedUser._id),
       });
     } else {

@@ -6,7 +6,7 @@ import Item from '../models/Item.js';
 // @access  Private
 export const createClaim = async (req, res) => {
   try {
-    const { itemId, description } = req.body;
+    const { itemId, description, contactPhone } = req.body;
     const proofImage = req.file ? req.file.path : '';
 
     const item = await Item.findById(itemId);
@@ -22,6 +22,7 @@ export const createClaim = async (req, res) => {
       item: itemId,
       claimant: req.user._id,
       description,
+      contactPhone,
       proofImage,
     });
 
@@ -52,7 +53,7 @@ export const getClaimsOnMyItems = async (req, res) => {
     const itemIds = myItems.map(item => item._id);
     const claims = await Claim.find({ item: { $in: itemIds } })
       .populate('item')
-      .populate('claimant', 'name email');
+      .populate('claimant', 'name email phoneNumber');
     res.json(claims);
   } catch (error) {
     res.status(500).json({ message: error.message });
