@@ -10,7 +10,11 @@ const ItemSchema = new mongoose.Schema({
   images: [{ type: String }],
   tags: [{ type: String }],
   status: { type: String, enum: ['active', 'resolved'], default: 'active' },
-  reportedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
+  reportedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  coordinates: {
+    lat: { type: Number },
+    lng: { type: Number }
+  }
 }, { timestamps: true });
 
 ItemSchema.index({ title: 'text', description: 'text', tags: 'text' });

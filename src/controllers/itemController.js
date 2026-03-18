@@ -5,7 +5,7 @@ import Item from '../models/Item.js';
 // @access  Private
 export const reportItem = async (req, res) => {
   try {
-    const { title, description, type, category, location, date, tags } = req.body;
+    const { title, description, type, category, location, date, tags, coordinates } = req.body;
     
     const imageUrls = req.files ? req.files.map(file => file.path) : [];
 
@@ -19,6 +19,7 @@ export const reportItem = async (req, res) => {
       images: imageUrls,
       tags: tags ? (typeof tags === 'string' ? JSON.parse(tags) : tags) : [],
       reportedBy: req.user._id,
+      coordinates: coordinates ? (typeof coordinates === 'string' ? JSON.parse(coordinates) : coordinates) : undefined,
     });
 
     // Automated Matching Logic
@@ -115,14 +116,16 @@ export const updateItem = async (req, res) => {
       return res.status(400).json({ message: 'Cannot update a resolved item' });
     }
 
-    const { title, description, category, location, date, tags } = req.body;
+    const { title, description, category, location, date, tags, status, coordinates } = req.body;
 
     item.title = title || item.title;
     item.description = description || item.description;
     item.category = category || item.category;
-    item.location = location || item.location;
-    item.date = date || item.date;
-    item.tags = tags ? (typeof tags === 'string' ? JSON.parse(tags) : tags) : item.tags;
+    if (location) item.location = location;
+    if (date) item.date = date;
+    if (tags) item.tags = tags ? (typeof tags === 'string' ? JSON.parse(tags) : tags) : item.tags;
+    if (status) item.status = status;
+    if (coordinates) item.coordinates = coordinates ? (typeof coordinates === 'string' ? JSON.parse(coordinates) : coordinates) : item.coordinates;
 
     if (req.files && req.files.length > 0) {
       const newImages = req.files.map(file => file.path);
